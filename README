@@ -1,3 +1,15 @@
-Learning Solidity, my firsts smart contracts
+install nodeJs
+install npm
 
-You can try this on https://remix.ethereum.org/
+//if truffle is not installed on your computer
+npm install -g truffle
+
+truffle -v
+
+//For init a project
+truffle init
+
+//Install compiler solc 0.8.9
+npm install solc@0.8.9
+
+Change the version compiler in truffle-config
