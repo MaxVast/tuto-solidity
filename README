@@ -13,3 +13,9 @@ truffle init
 npm install solc@0.8.9
 
 Change the version compiler in truffle-config
+
+// Try our scaffold commands to get started
+$ truffle create contract YourContractName // scaffold a contract
+$ truffle create test YourTestName         // scaffold a test
+
+http://trufflesuite.com/docs
