@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <div class="container mx-auto pt-10 pb-8">
+    <div class="container mx-auto pt-10 pb-10">
       <div class="mx-auto max-w-screen-lg">
-        <h1 style="text-align: center;">Welcome to my first Dapp</h1>
+        <h1 class="font-medium text-center">Welcome to my first Dapp</h1>
         <div class="mx-auto pt-10 items-center justify-center">
-          <div class="row flex items-center justify-center">
+          <div class="row flex items-center justify-center pb-10">
             <img src="/Ethereum.png" alt="Logo Ethereum" max-height="50" max-width="50" style="width: 15%;"/>
           </div>
           <div v-if="!currentAccount" class="row items-center justify-center">
@@ -12,14 +12,14 @@
               <button id="connectButton"
                 v-on:click="connectWallet"
                 :disabled="connecting"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{ (!connecting) ? 'Connect Metamask' : 'Connecting ... '}}</button>
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded font-medium">{{ (!connecting) ? 'Connect Metamask' : 'Connecting ... '}}</button>
             </div>
           </div>
           
           <div v-if="currentAccount">
             <div  class="row items-center justify-center">
               <div id="withdraw-all-eth" class="flex justify-center columns-12 columns-md-9 columns-sm-6 align-center">
-                <p>Address : {{ currentAccount }} <br/><br/>
+                <p class="font-medium">Address : {{ currentAccount }} <br/><br/>
                 Wallet amount : {{ currentWalletAmount }} ETH <br/> <br/>
                 Bank amount : {{ currentBalance }} ETH </p>
               </div>
@@ -28,32 +28,32 @@
 
             <div class="row items-center justify-center pt-8 pb-5">
               <div id="withdraw-all-eth" class="flex justify-center columns-12 columns-md-9 columns-sm-6 align-center">
-                <button @click="withdrawAllToken" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">Withdraw all ETH</button>
+                <button @click="withdrawAllToken" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded font-medium">Withdraw all ETH</button>
               </div>
             </div>
             
             <div class="row items-center justify-center pt-8 pb-5">
               <div  class="flex justify-between columns-12 columns-md-9 columns-sm-6 pt-5 pb-5 align-center">
                 <div id="deposit-eth" class="row items-center justify-center pt-8">
-                  <h3 style="text-align: center;">Deposit ETHEREUM</h3>
+                  <h3 class="font-medium text-center">Deposit ETHEREUM</h3>
                   <div  class="flex justify-center columns-12 columns-md-9 columns-sm-6 pt-5 pb-5 align-center">
                     <div class="flex items-center columns-md-6 pr-1">
                         <input type="text" placeholder="Deposit ETH" class="block w-full text-sm text-slate-500 border-4" v-model="form.depositAmount"/>
                     </div>
                     <div class="flex items-center columns-md-6 pl-1">
-                      <button @click="deposit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-6 rounded">Deposit ETH</button>
+                      <button @click="deposit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-6 rounded font-medium">Deposit ETH</button>
                     </div>
                   </div>
                 </div>
 
                 <div id="deposit-eth" class="row items-center justify-center pt-8">
-                  <h3 style="text-align: center;">Withdraw ETHEREUM</h3>
+                  <h3 class="font-medium text-center">Withdraw ETHEREUM</h3>
                   <div  class="flex justify-center columns-12 columns-md-9 columns-sm-6 pt-5 pb-5 align-center">
                     <div class="flex items-center columns-md-6 pr-1">
                       <input type="text" placeholder="Withdraw ETH" class="block w-full text-sm text-slate-500 border-4" v-model="form.withdrawalAmount"/>
                     </div>
                     <div class="flex items-center columns-md-6 pl-1">
-                      <button @click="withdrawToken" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-6 rounded">Withdraw ETH</button>
+                      <button @click="withdrawToken" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-6 rounded font-medium">Withdraw ETH</button>
                     </div>
                   </div>
                 </div>
