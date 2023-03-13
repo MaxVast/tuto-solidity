@@ -2,6 +2,11 @@
   <div id="app">
     <div class="container mx-auto pt-10 pb-10">
       <div class="mx-auto max-w-screen-lg">
+        <div v-if="currentAccount" class="row flex items-center justify-end">
+          <div id="disconnect-wallet" class="flex justify-end columns-12 columns-md-9 columns-sm-6 align-center">
+            <button @click="disconnectWallet" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded font-medium">Disconnect wallet</button>
+          </div>
+        </div>
         <h1 class="font-medium text-center">Welcome to my first Dapp</h1>
         <div class="mx-auto pt-10 items-center justify-center">
           <div class="row flex items-center justify-center pb-10">
@@ -15,7 +20,7 @@
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded font-medium">{{ (!connecting) ? 'Connect Metamask' : 'Connecting ... '}}</button>
             </div>
           </div>
-          
+
           <div v-if="currentAccount">
             <div  class="row items-center justify-center">
               <div id="withdraw-all-eth" class="flex justify-center columns-12 columns-md-9 columns-sm-6 align-center">
@@ -23,7 +28,7 @@
                 Wallet amount : {{ currentWalletAmount }} ETH <br/> <br/>
                 Bank amount : {{ currentBalance }} ETH </p>
               </div>
-              
+
             </div>
 
             <div class="row items-center justify-center pt-8 pb-5">
@@ -31,7 +36,7 @@
                 <button @click="withdrawAllToken" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded font-medium">Withdraw all ETH</button>
               </div>
             </div>
-            
+
             <div class="row items-center justify-center pt-8 pb-5">
               <div  class="flex justify-between columns-12 columns-md-9 columns-sm-6 pt-5 pb-5 align-center">
                 <div id="deposit-eth" class="row items-center justify-center pt-8">
@@ -75,6 +80,7 @@ export default {
   },
   data () {
     return {
+      ethereum: null,
       contract: null,
       loading: false,
       connecting: false,
@@ -93,7 +99,18 @@ export default {
     const { ethereum } = window
     // initialise contract
     if (ethereum) {
+      //Listen event AccountChanged
+      ethereum.on('accountsChanged', (e) => {
+        if(e.length > 0){
+          this.currentAccount = e[0]
+          this.checkBalance()
+          this.checkWallet()
+        }else{
+          this.handleDisconnect()
+        }
+      });
       const provider = new ethers.providers.Web3Provider(ethereum)
+      console.log(provider)
       const signer = provider.getSigner()
       const contract = new ethers.Contract(
         '0x5FbDB2315678afecb367f032d93F642f64180aa3', // change this when deploy new contract
@@ -105,8 +122,21 @@ export default {
     } else {
       this.contractInitialised = false
     }
+    if (!ethereum) {
+      console.log('Metamask not detected')
+      return
+    }
   },
   methods: {
+    async handleDisconnect() {
+      this.currentAccount = null
+      this.connecting = false
+      this.currentBalance = 0
+      this.currentWalletAmount = 0
+    },
+    async disconnectWallet () {
+      this.handleDisconnect()
+    },
     // connect metamask wallet
     async connectWallet () {
       try {
@@ -119,7 +149,6 @@ export default {
         // get accounts
         this.connecting = true
         const accounts = await ethereum.request({method: 'eth_requestAccounts'})
-        this.connecting = false
         console.log('Found account', accounts[0])
         this.currentAccount = accounts[0] // set first account to currentAccount
         // check balance of account
@@ -179,7 +208,7 @@ export default {
         const signer = provider.getSigner()
         const tx = {
           from: accounts[0],
-          to: '0x5FbDB2315678afecb367f032d93F642f64180aa3', 
+          to: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
           value: ethers.utils.parseEther(parseFloat(this.form.depositAmount).toString())
         }
         // call contract deposit method
@@ -224,7 +253,7 @@ export default {
       try {
         this.loading = true
         // call contract withdraw method
-        let txn = await this.contract.withdrawToken(this.currentAccount, 
+        let txn = await this.contract.withdrawToken(this.currentAccount,
            ethers.utils.parseEther(parseFloat(this.form.withdrawalAmount).toString()),
         )
         let txnResults = await txn.wait() // await for transaction to be mined
